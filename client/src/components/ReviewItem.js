@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { useState } from 'react';
 // import FinalReview from './FinalReview';
-function ReviewItem({ review, setReviews, isAuthenticated, setRevList }) {
+function ReviewItem({ review, setReviews, isAuthenticated, setRevList, currentUser }) {
   const [updateForm, setUpdateForm] = useState(false) 
   const [editReview, setEditReview] = useState({
     pros: "",
@@ -24,13 +24,13 @@ function ReviewItem({ review, setReviews, isAuthenticated, setRevList }) {
     })
       .then((resp) => {
         if (resp.status === 202) {
-            resp.json().then(data => 
-                setRevList(current => {
-                const finalEdit = current.findIndex(element => element.id === review.id)
-                return [...current.slice(0, finalEdit), finalEdit, ...current.slice(finalEdit + 1)]
+            resp.json().then(updatedReview => {
+              setRevList(current => {
+                  const finalEdit = current.findIndex(element => element.id === updatedReview.id)
+                return [...current.slice(0, finalEdit), updatedReview, ...current.slice(finalEdit + 1)]
 
                 })
-            )
+              })
         }
       })
       
@@ -51,28 +51,28 @@ function ReviewItem({ review, setReviews, isAuthenticated, setRevList }) {
     }
       
     
-    // console.log(review.course)
+    console.log(review.user?.id, currentUser.id)
   return (
 
 <div>
 <div className="card-deck col-sm-3 my-3">
-            <div class="card text-card">
+            <div className="card text-card">
                 {/* <h4 className='card-title my-3'>Course and Location: {review.overall_rating}</h4> */}
                 
 
-                    <p>{review.course.name}</p>
-                    <p>{review.course.location}</p>
+                    <p>{review.course?.name}</p>
+                    <p>{review.course?.location}</p>
 
 
                     <p>Review:</p>
                     <p>Pros: {review.pros}</p>
                     <p>Cons: {review.cons}</p>
 
-                    <p>by {review.user.name}</p>
+                    <p>by {review.user?.name}</p>
                 
-                <button onClick={ ()=> setUpdateForm(current => !current)}>
+                {review.user?.id === currentUser.id ? <button onClick={ ()=> setUpdateForm(current => !current)}>
                     Update
-                </button>
+                </button> : null}
             </div>
         </div>
     <div> { updateForm ? 
@@ -107,7 +107,7 @@ function ReviewItem({ review, setReviews, isAuthenticated, setRevList }) {
                 </form> :
                 null
                 }
-                <button onClick={()=> handleDeleteClick()}>Delete Review</button>
+                {currentUser && review.user?.id === currentUser.id ? <button onClick={()=> handleDeleteClick()}>Delete Review</button> : null}
         </div>
     </div>
     )
@@ -198,7 +198,7 @@ export default ReviewItem
 
 //     return(
 //         <div className="card-deck col-sm-3 my-3">
-//             <div class="card text-card">
+//             <div className="card text-card">
 //                 <h4 className='card-title my-3'>Course and Location:</h4>
 //                 {review && review.course && (
 //                     <NavLink to={`/courses/${review.course.id}`}>

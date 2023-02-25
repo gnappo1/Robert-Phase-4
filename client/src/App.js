@@ -16,7 +16,7 @@ function App() {
 
   const [currentUser, setCurrentUser] = useState(null)
   console.log(currentUser)
-  const [displayInfo, setDisplayInfo] = useState(null)
+  // const [displayInfo, setDisplayInfo] = useState(null)
 
   
 
@@ -45,12 +45,12 @@ function App() {
   }
 
   function onShowDetails(individual) {
-    setDisplayInfo(individual)
+    setCurrentUser(individual)
   }
 
   function onDeleteUser() {
     setCurrentUser(null)
-    setDisplayInfo(null)
+    // setDisplayInfo(null)
   }
 
   if(!currentUser) return (
@@ -70,16 +70,16 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Main />} />
 
-          <Route exact path="/reviews" element={<ReviewList />} />
+          <Route exact path="/reviews" element={<ReviewList currentUser={currentUser}/>} />
 
           <Route exact path="/users" element={<UserList />} />
 
 
           <Route exact path="/courses" element={<CourseList />} />
 
-          <Route exact path='/courses/:id' element={<CourseDetail onShowDetails={onShowDetails} displayInfo={displayInfo} currentUser={currentUser} onDeleteUser={onDeleteUser} />} />
+          <Route exact path='/courses/:id' element={<CourseDetail onShowDetails={onShowDetails} displayInfo={currentUser} currentUser={currentUser} onDeleteUser={onDeleteUser} />} />
 
-          <Route exact path='/users/:id' element={<UserDetail onShowDetails={onShowDetails} displayInfo={displayInfo} currentUser={currentUser} onDeleteUser={onDeleteUser} />} />
+          <Route exact path='/users/:id' element={<UserDetail onShowDetails={onShowDetails} displayInfo={currentUser} currentUser={currentUser} onDeleteUser={onDeleteUser} />} />
 
           
         </Routes>

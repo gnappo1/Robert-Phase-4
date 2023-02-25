@@ -31,7 +31,12 @@ function ReviewForm({ currentUser, onSubmitNewReview, course }) {
                 if(res.status === 201) {
                     res.json()
                     .then(newReview => {
-                        return setSeeReviews(current => [...current, newReview])
+                        return onSubmitNewReview(newReview)
+                    })
+                } else {
+                    res.json()
+                    .then(newErrors => {
+                        alert(newErrors.errors)
                     })
                 }
 

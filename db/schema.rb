@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_21_070604) do
+ActiveRecord::Schema.define(version: 2023_02_24_211845) do
 
   create_table "courses", force: :cascade do |t|
     t.string "name"
@@ -22,6 +22,16 @@ ActiveRecord::Schema.define(version: 2023_02_21_070604) do
     t.string "img_url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "friendships", force: :cascade do |t|
+    t.integer "recipient_id", null: false
+    t.integer "sender_id", null: false
+    t.string "status", default: "pending"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["recipient_id"], name: "index_friendships_on_recipient_id"
+    t.index ["sender_id"], name: "index_friendships_on_sender_id"
   end
 
   create_table "reviews", force: :cascade do |t|
@@ -48,6 +58,8 @@ ActiveRecord::Schema.define(version: 2023_02_21_070604) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "friendships", "users", column: "recipient_id"
+  add_foreign_key "friendships", "users", column: "sender_id"
   add_foreign_key "reviews", "courses"
   add_foreign_key "reviews", "users"
 end

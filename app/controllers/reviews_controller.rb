@@ -19,7 +19,13 @@ class ReviewsController < ApplicationController
     end
 
     def update
-        render json: Review.find(params[:id]).update!(review_params), status: :accepted
+        review = Review.find(params[:id])
+        if review.user == @current_user
+            review.update!(review_params)
+            render json: review, status: :accepted
+        else
+            render json: { errors: "Not authorized, not your review!" }, status: :unauthorized
+        end
     end
 
     def destroy

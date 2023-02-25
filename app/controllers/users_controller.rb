@@ -10,7 +10,11 @@ class UsersController < ApplicationController
     end
 
     def show
-        render json: @current_user, status: :ok
+        if params[:id]
+            render json: User.find(params[:id]), status: :ok
+        else
+            render json: @current_user, status: :ok
+        end
     end
 
     def index
@@ -19,13 +23,13 @@ class UsersController < ApplicationController
 
 
     def update
-        updated_user = User.find(params[:id])
-        updated_user.update!(user_params)
-        render json: updated_user, status: :accepted
+        # updated_user = User.find(params[:id])
+        @current_user.update!(user_params)
+        render json: @current_user, status: :accepted
     end
 
     def destroy
-        render json: User.find(params[:id]).destroy!
+        render json: @current_user.destroy!
         head :no_content
     end
 

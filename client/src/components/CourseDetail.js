@@ -34,7 +34,7 @@ console.log(currentCourse)
     }
 
     function onSubmitNewReview(newReview) {
-        setCurrentReviews([...currentReviews, newReview])
+        setCurrentCourse({...currentCourse, reviews: [...currentCourse.reviews, newReview]})
         onShowDetails(displayInfo)
         toggleForm()
     }

@@ -10,16 +10,17 @@ function UserDetail({ onShowDetails, displayInfo, currentUser, onDeleteUser, onU
     const [isUpdating, setIsUpdating] = useState(false)
     const [name, setName] = useState(currentUser ? currentUser.name : '');
     const [image, setImage] = useState(currentUser?.image || '');
+    const [currentVisitedUser, setCurrentVisitedUser] = useState(null)
 
     useEffect(() => {
         fetch(`/users/${id}`)
         .then(res => {
             if(res.ok) {
                 res.json()
-                .then(oneUser => onShowDetails(oneUser))
+                .then(oneUser => setCurrentVisitedUser(oneUser))
             }
         })
-    }, [id, onShowDetails])
+    }, [id])
 
     function handleUserUpdate() {
         setIsUpdating(!isUpdating)
@@ -43,7 +44,10 @@ function UserDetail({ onShowDetails, displayInfo, currentUser, onDeleteUser, onU
             .then(res => {
                 if(res.status === 202) {
                     res.json()
-                    .then((updatedUser) => onShowDetails(updatedUser)) 
+                    .then((updatedUser) => {
+                        onShowDetails(updatedUser)
+                        setCurrentVisitedUser(updatedUser)
+                    }) 
                     .then(handleUserUpdate)
                 }
                 alert('Profile successfully updated!')
@@ -111,7 +115,7 @@ function UserDetail({ onShowDetails, displayInfo, currentUser, onDeleteUser, onU
                                 </div>
                             </div>
                         }
-                        {displayInfo.id === currentUser.id && !isUpdating ? 
+                        {currentVisitedUser?.id === currentUser.id && !isUpdating ? 
                             <div>
                                 <button className='btn btn-secondary' onClick={() => handleUserUpdate(currentUser)}>Update Profile</button> 
                                 <button className='btn btn-secondary' onClick={() => handleUserDelete(currentUser)}>Delete Account</button>
